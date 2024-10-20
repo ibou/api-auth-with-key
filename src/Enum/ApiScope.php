@@ -11,5 +11,6 @@ enum ApiScope: string
     case GAME_UPDATE = 'ROLE_GAME_UPDATE';
     case GAME_DELETE = 'ROLE_GAME_DELETE';
 
+    case USER_READ = 'ROLE_USER';
 
 }

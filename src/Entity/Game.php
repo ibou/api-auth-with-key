@@ -2,38 +2,11 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
 use App\Repository\GameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
-#[ApiResource(
-    operations: [
-        new Get(
-            security: 'is_granted("ROLE_GAME_READ")'
-        ),
-        new Post(
-            security: 'is_granted("ROLE_GAME_CREATE")'
-        ),
-        new GetCollection(
-            security: 'is_granted("ROLE_GAME_READ")'
-        ),
-        new Delete(
-            security: 'is_granted("ROLE_GAME_DELETE")'
-        ),
-        new Patch(
-            security: 'is_granted("ROLE_GAME_UPDATE")'
-        ),
-
-    ],
-
-)]
 class Game
 {
     #[ORM\Id]
@@ -45,10 +18,13 @@ class Game
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?bool $isMultiplayer = null;
+    private ?bool $isMultiplayer = false;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $releaseDate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'games')]
+    private ?User $owner = null;
 
     public function getId(): ?int
     {
@@ -67,12 +43,12 @@ class Game
         return $this;
     }
 
-    public function isMultiplayer(): ?bool
+    public function getIsMultiplayer(): ?bool
     {
         return $this->isMultiplayer;
     }
 
-    public function setMultiplayer(bool $isMultiplayer): static
+    public function setIsMultiplayer(bool $isMultiplayer): static
     {
         $this->isMultiplayer = $isMultiplayer;
 
@@ -87,6 +63,18 @@ class Game
     public function setReleaseDate(\DateTimeImmutable $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }
