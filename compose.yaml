@@ -10,4 +10,11 @@ services:
             # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
             # See https://docs.docker.com/compose/compose-file/compose-file-v3/#ports for more information.
             - '3307:3306'
-
+    mailhog:
+        image: mailhog/mailhog
+        container_name: mailhog
+        logging:
+            driver: 'none'
+        ports:
+            - 1025:1025 #SMTP
+            - 8025:8025 #Boite mail
