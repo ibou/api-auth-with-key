@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Game;
@@ -34,16 +35,24 @@ use App\State\EntityClassDtoStateProvider;
         ),
 
     ],
-    paginationItemsPerPage: 5,
+    paginationItemsPerPage: 12,
     security: 'is_granted("ROLE_GAME_READ")',
     provider: EntityClassDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
     stateOptions: new Options(entityClass: Game::class),
 
 )]
+#[ApiResource(
+    uriTemplate: '/games/{gameId}/users',
+    operations: [ new GetCollection() ],
+    uriVariables: [
+        'gameId' => new Link(toProperty: 'owner', fromClass: UserApi::class),
+    ],
+    provider: EntityClassDtoStateProvider::class,
+)]
 class GameApi
 {
-    #[ApiProperty(readable: false, writable: false, identifier: true)]
+    #[ApiProperty(readable: true, writable: false, identifier: true)]
     public ?int $id = null;
 
     public ?string $name = null;
@@ -52,6 +61,7 @@ class GameApi
 
     public ?\DateTimeImmutable $releaseDate = null;
 
+    #[ApiProperty(readable: true, writable: false, genId: true)]
     public ?UserApi $owner = null;
 
 }

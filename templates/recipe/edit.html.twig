@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Hi - {{ parent() }} - Edit recipe
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Edit</h1>
+
+        {{ form_start(form) }}
+        {{ form_row(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

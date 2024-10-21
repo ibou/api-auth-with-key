@@ -11,8 +11,6 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
-use App\ApiResource\UserApi;
-use App\Entity\User;
 use ArrayIterator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfonycasts\MicroMapper\MicroMapperInterface;
@@ -40,6 +38,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
             foreach ($entities as $entity) {
                 $dtos[] = $this->mapEntityToDto(entity: $entity, resourceClass: $resourceClass);
             }
+           // dd($dtos);
 
             return new TraversablePaginator(
                 traversable: new ArrayIterator($dtos),

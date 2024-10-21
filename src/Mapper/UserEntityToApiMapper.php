@@ -6,6 +6,7 @@ namespace App\Mapper;
 
 use App\ApiResource\GameApi;
 use App\ApiResource\UserApi;
+use App\Entity\Game;
 use App\Entity\User;
 use Symfonycasts\MicroMapper\AsMapper;
 use Symfonycasts\MicroMapper\MapperInterface;
@@ -45,21 +46,13 @@ class UserEntityToApiMapper implements MapperInterface
         $dto->username = $entity->getUsername();
         $dto->flameThrowingDistance = rand(1, 100);
 
-        /*
-        $dto->dragonTreasures = array_map(function(DragonTreasure $dragonTreasure) {
-            return $this->microMapper->map($dragonTreasure, DragonTreasureApi::class, [
-                MicroMapperInterface::MAX_DEPTH => 0,
-            ]);
-        }, $entity->getPublishedDragonTreasures()->getValues());
-        */
 
-        $games = [];
-        foreach ($entity->getGames() as $game) {
-            $games[] = $this->microMapper->map($game, GameApi::class, [
+        $dto->games = array_map(function(Game $game) {
+            return $this->microMapper->map($game, GameApi::class, [
                 MicroMapperInterface::MAX_DEPTH => 0,
             ]);
-        }
-        $dto->games = $games;
+        }, $entity->getGames()->getValues());
+
         return $dto;
     }
 }
