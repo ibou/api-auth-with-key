@@ -1,5 +1,10 @@
 import './bootstrap.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/app.css';
 
-console.log('This lhi comming soon 🎉');
+import confetti from 'canvas-confetti'
+
+document.body.addEventListener('dblclick', () => {
+    confetti()
+})

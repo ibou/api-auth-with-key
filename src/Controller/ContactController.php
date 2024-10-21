@@ -37,7 +37,7 @@ class ContactController extends AbstractController
 
             $mailer->send($email);
             $this->addFlash('success', 'Votre message a bien été envoyé');
-            //return $this->redirectToRoute('contact');
+            return $this->redirectToRoute('contact');
         }
         return $this->render('contact/contact.html.twig', [
             'form' => $form,

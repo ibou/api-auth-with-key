@@ -6,6 +6,7 @@ use App\Repository\RecipeRepository;
 use App\Validator\BanWord;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,22 +19,24 @@ class Recipe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['recipes:index', 'recipes:create'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 4, groups: ['Extras'])]
     #[BanWord(banWords: ['spam', 'argent', 'jeux'], groups: ['Extra'])]
-
+    #[Groups(['recipes:index', 'recipes:create'])]
     private string $title = '';
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
     #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: 'Invalid slug')]
+    #[Groups(['recipes:index', 'recipes:create'])]
     private string $slug = '';
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(min: 5)]
-
+    #[Groups(['recipes:index', 'recipes:create'])]
     private string $content = '';
 
     #[ORM\Column]
@@ -45,6 +48,7 @@ class Recipe
     #[ORM\Column]
     #[Assert\Positive]
     #[Assert\LessThanOrEqual(8000)]
+    #[Groups(['recipes:index', 'recipes:create'])]
     private ?int $duration = null;
 
     public function __construct()

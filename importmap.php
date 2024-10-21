@@ -41,4 +41,7 @@ return [
     'highlight.js/lib/languages/javascript' => [
         'version' => '11.10.0',
     ],
+    'canvas-confetti' => [
+        'version' => '1.9.3',
+    ],
 ];
