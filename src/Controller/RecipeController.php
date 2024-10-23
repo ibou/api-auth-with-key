@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
+use App\Security\Voter\RecipeVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RecipeController extends AbstractController
@@ -33,14 +36,20 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recettes', name: 'recipe.index')]
-    public function index(RecipeRepository $recipeRepository): Response
+    //#[IsGranted(RecipeVoter::LIST)]
+    public function index(Request $request,RecipeRepository $recipeRepository, Security $security): Response
     {
+        $page = $request->query->getInt('page', 1);
+        $canListAll = $security->isGranted(RecipeVoter::LIST_ALL);
+        $userId = $security->getUser()?->getId();
+        $recipes = $recipeRepository->paginatedRecipes(page: $page, userId: $canListAll ? null: $userId,  limit: 5);
         return $this->render('recipe/index.html.twig', [
-            'recipes' => $recipeRepository->findAll(),
+            'recipes' => $recipes,
         ]);
     }
 
     #[Route('/create', name: 'recipe.new')]
+    #[IsGranted(RecipeVoter::CREATE, subject: 'recipe')]
     public function new(Request$request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(RecipeType::class);
@@ -62,6 +71,7 @@ class RecipeController extends AbstractController
 
     //recettes.edit
     #[Route('/recettes/{id}/edit', name: 'recipe.edit')]
+    #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -80,6 +90,7 @@ class RecipeController extends AbstractController
 
     //recipe.delete
     #[Route('/recettes/{id}/delete', name: 'recipe.delete', methods: ['DELETE'])]
+    #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function delete(Recipe $recipe, EntityManagerInterface $em): Response
     {
         $em->remove($recipe);

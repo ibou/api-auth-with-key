@@ -8,10 +8,20 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         api_keys_provider:
             id: App\Security\ApiKeyProvider
+        api_user_provider:
+            entity:
+                class: App\Entity\User
+                property: apiToken
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        app:
+            pattern: ^/app/
+            provider: api_user_provider
+            custom_authenticator: App\Security\ApiUserAuthenticator
+            stateless: true
+            lazy: true
         api:
             pattern: ^/api
             stateless: true

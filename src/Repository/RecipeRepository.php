@@ -29,11 +29,17 @@ class RecipeRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function paginatedRecipes(int $page, int $limit): PaginationInterface
+    public function paginatedRecipes(int $page, ?int $userId, int $limit): PaginationInterface
     {
-       $query = $this->createQueryBuilder('r')
+       $builder = $this->createQueryBuilder('r')
            ->select('r')
-            ->getQuery() ;
+             ;
+
+       if($userId) {
+           $builder->andWhere('r.owner = :userId')
+               ->setParameter('userId', $userId);
+       }
+       $query = $builder->getQuery();
 
        $result = $this->paginator->paginate(
            $query,
