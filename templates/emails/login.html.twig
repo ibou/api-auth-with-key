@@ -1,0 +1,13 @@
+{% apply inline_css %}
+
+    <h1>Welcome login {{ user.username }}!</h1>
+
+    <p>
+        Vous avez effectué une connexion via notre formulaire.
+
+        {{ user.email }}
+    </p>
+    <strong> You have {{ user.recipes|length }}</strong> recipes
+
+{% endapply %}
+

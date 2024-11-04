@@ -38,7 +38,6 @@ class EntityClassDtoStateProvider implements ProviderInterface
             foreach ($entities as $entity) {
                 $dtos[] = $this->mapEntityToDto(entity: $entity, resourceClass: $resourceClass);
             }
-           // dd($dtos);
 
             return new TraversablePaginator(
                 traversable: new ArrayIterator($dtos),

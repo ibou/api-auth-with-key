@@ -34,7 +34,7 @@ class RecipeController extends AbstractController
     ): JsonResponse
     {
         $page = $paginationDTO?->page ?? 1;
-        $recipes = $this->recipeRepository->paginatedRecipes(page: $page, limit: 5);
+        $recipes = $this->recipeRepository->paginatedRecipes(page: $page, userId: null, limit: 5);
 
         return $this->json($recipes, 200, [], [
             'groups' => 'recipes:index',

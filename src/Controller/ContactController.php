@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Dto\ContactDTO;
+use App\Event\ContactRequestEvent;
 use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -14,7 +17,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'contact')]
-    public function index(Request $request, MailerInterface $mailer): Response
+    public function index(
+        Request $request,
+        MailerInterface $mailer,
+        EventDispatcherInterface $dispatcher
+    ): Response
     {
         $data = new ContactDTO();
         $data->name = 'John Doe';
@@ -26,18 +33,17 @@ class ContactController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
 
-            $email = (new Email())
-                ->from($form->get('email')->getData())
-                ->to('local@example.com')
-                ->bcc('bcc@example.com')
-                ->priority(Email::PRIORITY_HIGH)
-                ->subject('Mail de contact')
-                ->text($form->get('message')->getData())
-                ->html('<p>'.$form->get('message')->getData().'</p>');
+            try {
+                $dispatcher->dispatch(new ContactRequestEvent($data));
 
-            $mailer->send($email);
-            $this->addFlash('success', 'Votre message a bien été envoyé');
-            return $this->redirectToRoute('contact');
+                $this->addFlash('success', 'Votre message a bien été envoyé');
+
+                return $this->redirectToRoute('contact');
+
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue');
+            }
+
         }
         return $this->render('contact/contact.html.twig', [
             'form' => $form,

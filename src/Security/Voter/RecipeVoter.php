@@ -7,9 +7,10 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-final class RecipeVoter extends Voter
+class RecipeVoter extends Voter
 {
     public const EDIT = 'RECIPE_EDIT';
+    public const DELETE = 'RECIPE_DELETE';
     public const VIEW = 'RECIPE_VIEW';
     public const CREATE = 'RECIPE_CREATE';
     public const LIST = 'RECIPE_LIST';
@@ -17,31 +18,33 @@ final class RecipeVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::CREATE, self::LIST, self::LIST_ALL]) || in_array($attribute, [self::EDIT, self::VIEW])
-            && $subject instanceof Recipe;
+        return
+            in_array($attribute, [self::CREATE, self::LIST, self::LIST_ALL]) ||
+            (
+                in_array($attribute, [self::EDIT, self::VIEW])
+            );
     }
 
+    /**
+     * @param Recipe|null $subject
+     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-
         // if the user is anonymous, do not grant access
         if (!$user instanceof User) {
             return false;
         }
 
-
-        // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::EDIT:
+            case self::DELETE:
                 return $subject->getOwner()->getId() === $user->getId();
-
-            case self::VIEW:
             case self::LIST:
             case self::CREATE:
+            case self::VIEW:
                 return true;
+                break;
         }
 
         return false;

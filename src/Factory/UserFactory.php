@@ -32,8 +32,8 @@ use Zenstruck\Foundry\RepositoryProxy;
 final class UserFactory extends PersistentProxyObjectFactory
 {
     const USERNAMES = [
-        'FlamingInferno',
-        'ScaleSorcerer',
+        'user',
+        'admin',
         'TheDragonWithBadBreath',
         'BurnedOut',
         'ForgotMyOwnName',

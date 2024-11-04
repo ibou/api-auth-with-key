@@ -52,9 +52,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['users:read'])]
     private ?string $apiToken = null;
 
+    /**
+     * @var Collection<int, Recipe>
+     */
+    #[ORM\OneToMany(targetEntity: Recipe::class, mappedBy: 'owner')]
+    private Collection $recipes;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
 
 
@@ -82,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -185,6 +192,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApiToken(?string $apiToken): static
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): static
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes->add($recipe);
+            $recipe->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): static
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            // set the owning side to null (unless already changed)
+            if ($recipe->getOwner() === $this) {
+                $recipe->setOwner(null);
+            }
+        }
 
         return $this;
     }

@@ -6,10 +6,9 @@
 
 {% block body %}
     <div class="container mt-4">
-        <h1 class="mb-4">Edit</h1>
-
-        {{ form_start(form) }}
-        {{ form_row(form) }}
-        {{ form_end(form) }}
+        <h1 class="mb-4">Editing {{ recipe.title}} </h1>
+        <turbo-frame id="recipe_{{ recipe.id }}">
+            {{ form(form, {action: path('recipe.edit', {id: recipe.id})}) }}
+        </turbo-frame>
     </div>
 {% endblock %}

@@ -51,6 +51,9 @@ class Recipe
     #[Groups(['recipes:index', 'recipes:create'])]
     private ?int $duration = null;
 
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    private ?User $owner = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -130,6 +133,18 @@ class Recipe
     public function setDuration(int $duration): static
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }

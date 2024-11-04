@@ -19,4 +19,7 @@ class ContactDTO
     #[Assert\NotBlank]
     #[Assert\Length(min: 10, max: 500)]
     public string $message = '';
+
+    #[Assert\Email]
+    public string $service = 'RH';
 }

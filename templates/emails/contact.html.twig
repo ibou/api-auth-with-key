@@ -1,0 +1,18 @@
+{% apply inline_css %}
+<h1>Welcome contact us !</h1>
+
+<p>
+    Une nouvelle demande de contact
+</p>
+
+<ul>
+    <li><strong>Nom</strong>: {{ data.name }}</li>
+    <li><strong>Email</strong>: {{ data.email }}</li>
+</ul>
+
+<p>
+    <strong>Message</strong>:
+    <br/>
+    {{ data.message }}
+</p>
+{% endapply %}

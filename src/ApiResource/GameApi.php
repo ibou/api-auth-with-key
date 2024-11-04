@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Game;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[ApiResource(
     shortName: 'Game',

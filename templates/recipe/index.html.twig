@@ -20,7 +20,14 @@
                 <tbody>
                     {% for recipe in recipes %}
                         <tr>
-                            <td>{{ recipe.title }}</td>
+                            <td>
+                                <turbo-frame id="recipe_{{ recipe.id }}" >
+                                    <a href="{{ path('recipe.edit', {'id': recipe.id}) }}">
+                                        {{ recipe.title }}
+                                    </a>
+                                </turbo-frame>
+
+                            </td>
                             <td>{{ recipe.content|slice(0, 100) }}...</td>
                             <td>
                                 <a href="{{ path('recipe.edit', {'id': recipe.id}) }}" class="btn btn-primary btn-sm">Voir la recette</a>
