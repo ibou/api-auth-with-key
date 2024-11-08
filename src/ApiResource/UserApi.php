@@ -68,7 +68,9 @@ class UserApi
      * @var array<int, GameApi>
      */
     #[ApiProperty(
-        uriTemplate: '/users/{userId}/games',
+        uriTemplate: '/users/{userId}/games{._format}',
+        example: '/users/1/games',
+
     )]
     public ?array $games = [];
 }

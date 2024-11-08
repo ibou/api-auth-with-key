@@ -45,7 +45,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 )]
 #[ApiResource(
-    uriTemplate: '/users/{userId}/games',
+    shortName: 'Game',
+    description: 'A game is a structured form of play, usually undertaken for entertainment or fun, and sometimes used as an educational tool.',
+    uriTemplate: '/users/{userId}/games{._format}',
     operations: [ new GetCollection() ],
     uriVariables: [ 
         'userId' => new Link(toProperty: 'owner', fromClass: UserApi::class),
