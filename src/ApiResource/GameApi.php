@@ -19,6 +19,7 @@ use App\State\EntityClassDtoStateProvider;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[ApiResource(
+  #  uriTemplate: '/users/{userId}/games{._format}',
     shortName: 'Game',
     operations: [
         new Get(
@@ -44,12 +45,14 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 )]
 #[ApiResource(
-    uriTemplate: '/games/{gameId}/users',
+    uriTemplate: '/users/{userId}/games',
     operations: [ new GetCollection() ],
-    uriVariables: [
-        'gameId' => new Link(toProperty: 'owner', fromClass: UserApi::class),
+    uriVariables: [ 
+        'userId' => new Link(toProperty: 'owner', fromClass: UserApi::class),
     ],
     provider: EntityClassDtoStateProvider::class,
+    processor: EntityClassDtoStateProcessor::class,
+    stateOptions: new Options(entityClass: Game::class),
 )]
 class GameApi
 {

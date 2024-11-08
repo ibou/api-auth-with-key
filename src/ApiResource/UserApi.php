@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Put(),
         new Delete(),
+       
     ],
     paginationItemsPerPage: 10,
     security: 'is_granted("ROLE_USER")',
@@ -66,5 +67,8 @@ class UserApi
     /**
      * @var array<int, GameApi>
      */
+    #[ApiProperty(
+        uriTemplate: '/users/{userId}/games',
+    )]
     public ?array $games = [];
 }
